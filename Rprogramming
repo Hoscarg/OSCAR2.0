@@ -1,0 +1,47 @@
+pollutantmean <- function(directory, pollutant=NULL, id = 1:332) {
+        dat <- data.frame()
+        for (i in id){
+                if (i<10){
+                        setwd(paste(getwd(),"/",directory,sep=""))
+                        Idmon<-paste("00",i,sep="")
+                        archivo<-read.csv(paste(Idmon,".csv",sep=""))
+                        dat <- rbind(dat, archivo)
+                        setwd("C:/Users/hp/Desktop/Coursera")
+                }else if (i<100){
+                        setwd(paste(getwd(),"/",directory,sep=""))
+                        Idmon<-paste("0",i,sep="")
+                        archivo<-read.csv(paste(Idmon,".csv",sep=""))
+                        dat <- rbind(dat, archivo)
+                        setwd("C:/Users/hp/Desktop/Coursera")
+                }else{
+                        setwd(paste(getwd(),"/",directory,sep=""))
+                        Idmon<-i
+                        archivo<-read.csv(paste(Idmon,".csv",sep=""))
+                        dat <- rbind(dat, archivo)
+                        setwd("C:/Users/hp/Desktop/Coursera")
+                }
+        }
+        
+        if (pollutant=="nitrate"){
+                t<-(mean(dat$nitrate, na.rm=TRUE))
+        }else{        
+                t<-(mean(dat$sulfate, na.rm=TRUE))
+        }
+        print(t)
+}
+
+
+
+complete <- function(directory, id = 1:332) {
+        dat <- data.frame()
+        files_full<-list.files(directory,full.names=TRUE)
+        for (i in id){
+                x<-read.csv(files_full[i])
+                y<-complete.cases(x)
+                Nobs<-nrow(x[y,])
+                z<-c(i,Nobs)
+                dat<-rbind(dat,z)
+                colnames(dat) <- c("id", "nobs")
+        }
+        print(dat)
+}
